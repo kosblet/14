@@ -32,3 +32,4 @@ class Category:
         # Увеличиваем счетчики при создании новой категории
         Category.category_count += 1
         Category.product_count += len(products)
+

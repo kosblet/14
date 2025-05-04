@@ -47,3 +47,4 @@ def test_category_counters():
 
     assert Category.category_count == 2
     assert Category.product_count == 3
+
