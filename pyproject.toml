@@ -1,0 +1,19 @@
+[project]
+name = "pythonproject6"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Koss",email = "kostuavavkon@mail.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pytest (>=8.3.5,<9.0.0)",
+    "coverage (>=7.8.0,<8.0.0)",
+    "flake8 (>=7.2.0,<8.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
