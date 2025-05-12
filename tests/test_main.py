@@ -1,5 +1,5 @@
 import pytest
-from main import Product, Category
+from ecommerce.main import Product, Category
 
 
 # Тесты для класса Product
