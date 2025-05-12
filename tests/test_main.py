@@ -1,5 +1,5 @@
 import pytest
-from main import Product, Category
+from ecommerce.main import Product, Category
 
 
 # Тесты для класса Product
@@ -47,3 +47,4 @@ def test_category_counters():
 
     assert Category.category_count == 2
     assert Category.product_count == 3
+
