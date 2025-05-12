@@ -1,41 +1,35 @@
 import pytest
 from ecommerce import Product, Category
 
-def test_product_initialization():
-    product = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    assert product.name == "Samsung Galaxy S23 Ultra"
-    assert product.description == "256GB, Серый цвет, 200MP камера"
-    assert product.price == 180000.0
-    assert product.quantity == 5
 
-def test_category_initialization():
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    category = Category(
-        "Смартфоны", "Смартфоны как средство коммуникации", [product1, product2]
-    )
-    assert category.name == "Смартфоны"
-    assert category.description == "Смартфоны как средство коммуникации"
-    assert len(category.products) == 2
+def test_product_str():
+    product = Product("Test", "Test Description", 100.0, 5)
+    assert str(product) == "Test, 100.0 руб. Остаток: 5 шт."
 
-def test_category_counters():
-    Category.category_count = 0
-    Category.product_count = 0
 
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
+def test_category_str():
+    product1 = Product("P1", "Desc1", 100.0, 10)
+    product2 = Product("P2", "Desc2", 200.0, 5)
+    category = Category("Электроника", "Описание", [product1, product2])
+    assert str(category) == "Электроника, количество продуктов: 15 шт."
+
+
+def test_product_add():
+    product1 = Product("P1", "Desc1", 100.0, 10)
+    product2 = Product("P2", "Desc2", 200.0, 5)
+    assert product1 + product2 == 100.0 * 10 + 200.0 * 5  # 1000 + 1000 = 2000.0
+
+    with pytest.raises(TypeError):
+        product1 + object()  # Нельзя сложить с другим типом
+
+
+def test_category_products_property():
+    product1 = Product("P1", "Desc1", 100.0, 10)
+    product2 = Product("P2", "Desc2", 200.0, 5)
+    category = Category("Электроника", "Описание", [product1, product2])
+
+    expected = (
+        "P1, 100.0 руб. Остаток: 10 шт.\n"
+        "P2, 200.0 руб. Остаток: 5 шт.\n"
     )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
-
-    category1 = Category(
-        "Смартфоны", "Смартфоны как средство коммуникации", [product1, product2]
-    )
-    category2 = Category("Телевизоры", "Современные телевизоры", [product3])
-
-    assert Category.category_count == 2
-    assert Category.product_count == 3
+    assert category.products == expected
