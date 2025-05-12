@@ -1,8 +1,6 @@
 import pytest
-from ecommerce.main import Product, Category
+from ecommerce import Product, Category
 
-
-# Тесты для класса Product
 def test_product_initialization():
     product = Product(
         "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
@@ -12,8 +10,6 @@ def test_product_initialization():
     assert product.price == 180000.0
     assert product.quantity == 5
 
-
-# Тесты для класса Category
 def test_category_initialization():
     product1 = Product(
         "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
@@ -22,15 +18,11 @@ def test_category_initialization():
     category = Category(
         "Смартфоны", "Смартфоны как средство коммуникации", [product1, product2]
     )
-
     assert category.name == "Смартфоны"
     assert category.description == "Смартфоны как средство коммуникации"
     assert len(category.products) == 2
 
-
-# Тесты для счетчиков категорий и продуктов
 def test_category_counters():
-    # Сбросим счетчики перед тестом
     Category.category_count = 0
     Category.product_count = 0
 
@@ -47,4 +39,3 @@ def test_category_counters():
 
     assert Category.category_count == 2
     assert Category.product_count == 3
-
