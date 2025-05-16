@@ -44,3 +44,4 @@ def test_category_reject_invalid_type():
     cat = Category("Смартфоны", "Телефоны", [])
     with pytest.raises(TypeError):
         cat.add_product("Not a product")
+

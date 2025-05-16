@@ -107,3 +107,4 @@ if __name__ == '__main__':
         cat_smartphones.add_product(grass1)
     except TypeError as e:
         print(f"Ошибка: {e}")
+
