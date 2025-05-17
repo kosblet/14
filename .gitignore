@@ -1,23 +1,12 @@
-# .gitignore
-
-# PyCharm IDE files
-.idea/
-
-# Python cache and temporary files
 __pycache__/
 *.pyc
-
-# Test coverage reports
-.htmlcov/
-coverage/
-
-# Virtual environment
+.idea/
 venv/
 env/
 ENV/
-
-# Other ignored files
-.DS_Store
+.htmlcov/
+coverage/
 *.log
 tmp/
 *.tmp
+.DS_Store
