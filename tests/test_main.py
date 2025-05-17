@@ -1,17 +1,23 @@
-# tests/test_main.py
 
 import pytest
-from ecommerce.main import Product, Smartphone, LawnGrass, Category
+from ecommerce.main import Product, Category, Smartphone, LawnGrass
 
 
 def test_smartphone_inheritance():
     sp = Smartphone("iPhone", "Best phone", 100000.0, 10, 98.5, "Pro", 512, "Черный")
     assert isinstance(sp, Product)
+    assert sp.efficiency == 98.5
+    assert sp.model == "Pro"
+    assert sp.memory == 512
+    assert sp.color == "Черный"
 
 
 def test_lawn_grass_inheritance():
     lg = LawnGrass("Trava", "Good lawn", 100.0, 50, "Россия", "7 дней", "Зеленый")
     assert isinstance(lg, Product)
+    assert lg.country == "Россия"
+    assert lg.germination_period == "7 дней"
+    assert lg.color == "Зеленый"
 
 
 def test_add_smartphone():
@@ -35,13 +41,25 @@ def test_add_mixed_types():
 
 def test_category_add_product():
     sp = Smartphone("iPhone", "Best phone", 100000.0, 10, 98.5, "Pro", 512, "Черный")
-    cat = Category("Смартфоны", "Телефоны", [])
+    cat = Category("Электроника", "Описание", [])
     cat.add_product(sp)
-    assert len(cat.products) > 0
+    assert len(cat.products.split("\n")) == 2
+    assert Category.product_count == 1
 
-
-def test_category_reject_invalid_type():
-    cat = Category("Смартфоны", "Телефоны", [])
     with pytest.raises(TypeError):
-        cat.add_product("Not a product")
+        cat.add_product("Не продукт")
 
+
+def test_category_counters():
+    Category.category_count = 0
+    Category.product_count = 0
+
+    product1 = Product("P1", "Desc1", 100.0, 10)
+    product2 = Product("P2", "Desc2", 200.0, 5)
+    product3 = Product("P3", "Desc3", 300.0, 15)
+
+    category1 = Category("Электроника", "Описание", [product1, product2])
+    category2 = Category("Другое", "Ещё описание", [product3])
+
+    assert Category.category_count == 2
+    assert Category.product_count == 3
