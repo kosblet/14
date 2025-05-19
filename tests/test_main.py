@@ -1,5 +1,9 @@
 import pytest
-from ecommerce.main import Product, Smartphone, LawnGrass
+from ecommerce.main import Product, Category
+
+def test_product_creation_with_zero_quantity():
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("Invalid Product", "Description", 1000.0, 0)
 
 def test_product_creation():
     product = Product("Test Product", "Description", 100.0, 5)
@@ -8,26 +12,14 @@ def test_product_creation():
     assert product.price == 100.0
     assert product.quantity == 5
 
-def test_smartphone_creation():
-    smartphone = Smartphone("Test Phone", "Description", 500.0, 10, 6.5, 6)
-    assert smartphone.name == "Test Phone"
-    assert smartphone.description == "Description"
-    assert smartphone.price == 500.0
-    assert smartphone.quantity == 10
-    assert smartphone.screen_size == 6.5
-    assert smartphone.ram == 6
+def test_category_middle_price():
+    product1 = Product("Product A", "Description A", 100.0, 5)
+    product2 = Product("Product B", "Description B", 200.0, 10)
+    product3 = Product("Product C", "Description C", 300.0, 15)
 
-def test_lawn_grass_creation():
-    grass = LawnGrass("Test Grass", "Description", 200.0, 20, "Green", "USA")
-    assert grass.name == "Test Grass"
-    assert grass.description == "Description"
-    assert grass.price == 200.0
-    assert grass.quantity == 20
-    assert grass.color == "Green"
-    assert grass.country_of_origin == "USA"
+    category = Category("Test Category", "Description", [product1, product2, product3])
+    assert category.middle_price() == 200.0  # (100 + 200 + 300) / 3
 
-def test_display_info(capsys):
-    product = Product("Test Product", "Description", 100.0, 5)
-    product.display_info()
-    captured = capsys.readouterr()
-    assert "Product: Test Product" in captured.out
+def test_category_middle_price_empty():
+    category = Category("Empty Category", "No products", [])
+    assert category.middle_price() == 0
