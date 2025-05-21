@@ -1,50 +1,66 @@
 import pytest
-from ecommerce.main import Product, Category
+from ecommerce.main import Product, Category, Smartphone, LawnGrass
 
+def test_product_creation_with_zero_quantity():
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("Invalid Product", "Description", 1000.0, 0)
 
-# Тесты для класса Product
-def test_product_initialization():
-    product = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    assert product.name == "Samsung Galaxy S23 Ultra"
-    assert product.description == "256GB, Серый цвет, 200MP камера"
-    assert product.price == 180000.0
+def test_product_creation():
+    product = Product("Test Product", "Description", 100.0, 5)
+    assert product.name == "Test Product"
+    assert product.description == "Description"
+    assert product.price == 100.0
     assert product.quantity == 5
 
+def test_smartphone_inheritance():
+    sp = Smartphone("iPhone", "Best phone", 100000.0, 10, 98.5, "Pro", 512, "Черный")
+    assert isinstance(sp, Product)
+    assert sp.efficiency == 98.5
+    assert sp.model == "Pro"
+    assert sp.memory == 512
+    assert sp.color == "Черный"
 
-# Тесты для класса Category
-def test_category_initialization():
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    category = Category(
-        "Смартфоны", "Смартфоны как средство коммуникации", [product1, product2]
-    )
+def test_lawn_grass_inheritance():
+    lg = LawnGrass("Trava", "Good lawn", 100.0, 50, "Россия", "7 дней", "Зеленый")
+    assert isinstance(lg, Product)
+    assert lg.country == "Россия"
+    assert lg.germination_period == "7 дней"
+    assert lg.color == "Зеленый"
 
-    assert category.name == "Смартфоны"
-    assert category.description == "Смартфоны как средство коммуникации"
-    assert len(category.products) == 2
+def test_add_smartphone():
+    sp1 = Smartphone("iPhone", "Best phone", 100000.0, 10, 98.5, "Pro", 512, "Черный")
+    sp2 = Smartphone("Xiaomi", "Budget phone", 30000.0, 20, 90.0, "Redmi", 128, "Серый")
+    assert sp1 + sp2 == 100000.0 * 10 + 30000.0 * 20
 
+def test_add_lawn_grass():
+    g1 = LawnGrass("Trava", "Good lawn", 100.0, 50, "Россия", "7 дней", "Зеленый")
+    g2 = LawnGrass("Trava2", "Better lawn", 120.0, 30, "США", "5 дней", "Светло-зеленый")
+    assert g1 + g2 == 100.0 * 50 + 120.0 * 30
 
-# Тесты для счетчиков категорий и продуктов
-def test_category_counters():
-    # Сбросим счетчики перед тестом
-    Category.category_count = 0
-    Category.product_count = 0
+def test_add_mixed_types():
+    sp = Smartphone("iPhone", "Best phone", 100000.0, 10, 98.5, "Pro", 512, "Черный")
+    lg = LawnGrass("Trava", "Good lawn", 100.0, 50, "Россия", "7 дней", "Зеленый")
+    with pytest.raises(TypeError):
+        _ = sp + lg
 
-    product1 = Product(
-        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5
-    )
-    product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    product3 = Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
+def test_category_add_product():
+    sp = Smartphone("iPhone", "Best phone", 100000.0, 10, 98.5, "Pro", 512, "Черный")
+    cat = Category("Электроника", "Описание", [])
+    cat.add_product(sp)
+    assert len(cat.products.split("\n")) == 2
+    assert Category.product_count == 1
 
-    category1 = Category(
-        "Смартфоны", "Смартфоны как средство коммуникации", [product1, product2]
-    )
-    category2 = Category("Телевизоры", "Современные телевизоры", [product3])
+    with pytest.raises(TypeError):
+        cat.add_product("Не продукт")
 
-    assert Category.category_count == 2
-    assert Category.product_count == 3
+def test_category_middle_price():
+    product1 = Product("Product A", "Description A", 100.0, 5)
+    product2 = Product("Product B", "Description B", 200.0, 10)
+    product3 = Product("Product C", "Description C", 300.0, 15)
 
+    category = Category("Test Category", "Description", [product1, product2, product3])
+    assert category.middle_price() == 200.0  # (100 + 200 + 300) / 3
+
+def test_category_middle_price_empty():
+    category = Category("Empty Category", "No products", [])
+    assert category.middle_price() == 0
